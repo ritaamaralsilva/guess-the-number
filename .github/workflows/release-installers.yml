@@ -77,6 +77,7 @@ jobs:
             --main-jar "${APP_NAME}.jar" \
             --main-class "$MAIN_CLASS" \
             --runtime-image target/image \
+            --java-options "--enable-native-access=javafx.graphics" \
             --dest dist
 
       - name: Package (Windows)
@@ -92,6 +93,7 @@ jobs:
             --main-jar "$env:APP_NAME.jar" `
             --main-class $env:MAIN_CLASS `
             --runtime-image "target\image" `
+            --java-options "--enable-native-access=javafx.graphics" \
             --dest dist
 
       - name: Package (Linux)
@@ -107,6 +109,7 @@ jobs:
             --main-jar "${APP_NAME}.jar" \
             --main-class "$MAIN_CLASS" \
             --runtime-image target/image \
+            --java-options "--enable-native-access=javafx.graphics" \
             --dest dist
 
       - name: List dist artifacts

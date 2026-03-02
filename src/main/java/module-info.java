@@ -1,6 +1,4 @@
 module io.github.ritaamaralsilva.guessthenumber {
-    requires javafx.controls;
-    requires transitive javafx.graphics;
-    
+    requires javafx.controls; 
     exports io.github.ritaamaralsilva;    
 }
