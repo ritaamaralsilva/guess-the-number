@@ -8,7 +8,7 @@
   <artifactId>guess-the-number</artifactId>
   <version>1.0.0</version>
   <name>guess-the-number</name>
-  <description>Guess The Number - JavaFX desktop game</description>
+  <description>Guess The Number - Java desktop game</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,6 +28,7 @@
   </dependencies>
 
   <build>
+    <finalName>GuessTheNumber</finalName>
     <plugins>
 
       <plugin>
@@ -51,13 +52,6 @@
           <stripDebug>true</stripDebug>
           <noManPages>true</noManPages>
           <noHeaderFiles>true</noHeaderFiles>
-
-          <!-- Optional: smaller runtime image -->
-          <jlinkZipName>${app.name}</jlinkZipName>
-
-          <!-- jpackage settings (works in Actions for all OSes) -->
-          <jpackageImageName>${app.name}</jpackageImageName>
-          <jpackageAppVersion>${project.version}</jpackageAppVersion>
         </configuration>
       </plugin>
 

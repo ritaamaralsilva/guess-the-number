@@ -1,4 +1,4 @@
-name: Build installers (jpackage) and upload to Release
+name: Build installers (jlink + jpackage) and upload to Release
 
 on:
   release:
@@ -16,6 +16,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      APP_NAME: GuessTheNumber
+      MAIN_CLASS: io.github.ritaamaralsilva.GuessTheNumberApp
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,30 +30,95 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-
-      - name: Build installer with jpackage
-        run: mvn -B clean javafx:jpackage
-
-      - name: List generated artifacts
+      # Normalize release version: v1.0.0 -> 1.0.0
+      - name: Extract version
         shell: bash
         run: |
-          echo "---- target directory ----"
-          ls -la target || true
-          echo "---- target/jpackage ----"
-          ls -la target/jpackage || true
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "Using TAG=$TAG, VERSION=$VERSION"
 
-      # Upload ALL common installer outputs produced by jpackage on each OS
+      # Linux: jpackage needs some system tooling to build .deb
+      - name: Install Linux packaging dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot dpkg-dev rpm
+
+      # 1) Build runtime image with JavaFX included
+      - name: Build jlink runtime image
+        run: mvn -B clean javafx:jlink
+
+      - name: Sanity check build outputs
+        shell: bash
+        run: |
+          ls -la target || true
+          test -f "target/${APP_NAME}.jar"
+          test -d "target/image"
+
+      # 2) Create installer with JDK jpackage (OS-specific type)
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          mkdir -p dist
+          jpackage \
+            --type dmg \
+            --name "$APP_NAME" \
+            --app-version "$VERSION" \
+            --input target \
+            --main-jar "${APP_NAME}.jar" \
+            --main-class "$MAIN_CLASS" \
+            --runtime-image target/image \
+            --dest dist
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          jpackage `
+            --type msi `
+            --name $env:APP_NAME `
+            --app-version $env:VERSION `
+            --input target `
+            --main-jar "$env:APP_NAME.jar" `
+            --main-class $env:MAIN_CLASS `
+            --runtime-image "target\image" `
+            --dest dist
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          mkdir -p dist
+          jpackage \
+            --type deb \
+            --name "$APP_NAME" \
+            --app-version "$VERSION" \
+            --input target \
+            --main-jar "${APP_NAME}.jar" \
+            --main-class "$MAIN_CLASS" \
+            --runtime-image target/image \
+            --dest dist
+
+      - name: List dist artifacts
+        shell: bash
+        run: ls -la dist || true
+
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            target/jpackage/**/*.dmg
-            target/jpackage/**/*.pkg
-            target/jpackage/**/*.msi
-            target/jpackage/**/*.exe
-            target/jpackage/**/*.deb
-            target/jpackage/**/*.rpm
-            target/jpackage/**/*.AppImage
-            target/jpackage/**/*.zip
+            dist/**/*.dmg
+            dist/**/*.msi
+            dist/**/*.exe
+            dist/**/*.deb
+            dist/**/*.rpm
+            dist/**/*.AppImage
+            dist/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
