@@ -48,9 +48,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y fakeroot dpkg-dev rpm
 
+      # Build and package the app with jlink + jpackage
+      - name: Build jar
+        run: mvn -B -DskipTests clean package
+
       # 1) Build runtime image with JavaFX included
       - name: Build jlink runtime image
-        run: mvn -B clean package javafx:jlink
+        run: mvn -B -DskipTests clean package jlink:jlink
 
       - name: Sanity check build outputs
         shell: bash
