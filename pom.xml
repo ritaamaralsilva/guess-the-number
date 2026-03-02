@@ -6,7 +6,7 @@
 
   <groupId>io.github.ritaamaralsilva</groupId>
   <artifactId>guess-the-number</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <name>guess-the-number</name>
   <description>Guess The Number - Java desktop game</description>
 
@@ -106,6 +106,12 @@
       <artifactId>javafx-graphics</artifactId>
       <version>${javafx.version}</version>
       <classifier>${javafx.classifier}</classifier>
+      <exclusions>
+        <exclusion>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-base</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -113,6 +119,16 @@
       <artifactId>javafx-controls</artifactId>
       <version>${javafx.version}</version>
       <classifier>${javafx.classifier}</classifier>
+      <exclusions>
+        <exclusion>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-base</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 

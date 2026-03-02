@@ -52,9 +52,16 @@ jobs:
       - name: Build jar
         run: mvn -B -DskipTests clean package
 
+      - name: Clear cached JavaFX jars
+        shell: bash
+        run: |
+          rm -rf ~/.m2/repository/org/openjfx/javafx-base
+          rm -rf ~/.m2/repository/org/openjfx/javafx-graphics
+          rm -rf ~/.m2/repository/org/openjfx/javafx-controls
+
       # 1) Build runtime image with JavaFX included
       - name: Build jlink runtime image
-        run: mvn -B -DskipTests clean package jlink:jlink
+        run: mvn -B -DskipTests javafx:jlink
 
       - name: Sanity check build outputs
         shell: bash
@@ -93,7 +100,7 @@ jobs:
             --main-jar "$env:APP_NAME.jar" `
             --main-class $env:MAIN_CLASS `
             --runtime-image "target\image" `
-            --java-options "--enable-native-access=javafx.graphics" \
+            --java-options "--enable-native-access=javafx.graphics" `
             --dest dist
 
       - name: Package (Linux)
