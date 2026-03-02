@@ -6,7 +6,7 @@
 
   <groupId>io.github.ritaamaralsilva</groupId>
   <artifactId>guess-the-number</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <name>guess-the-number</name>
   <description>Guess The Number - Java desktop game</description>
 
@@ -18,7 +18,7 @@
     <main.class>io.github.ritaamaralsilva.guessthenumber/io.github.ritaamaralsilva.GuessTheNumberApp</main.class>
     <app.name>GuessTheNumber</app.name>
 
-    <javafx.classifier>mac</javafx.classifier>
+    <javafx.classifier></javafx.classifier>
   </properties>
 
   <profiles>
