@@ -50,7 +50,7 @@ jobs:
 
       # 1) Build runtime image with JavaFX included
       - name: Build jlink runtime image
-        run: mvn -B clean javafx:jlink
+        run: mvn -B clean package javafx:jlink
 
       - name: Sanity check build outputs
         shell: bash
