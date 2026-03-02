@@ -1,0 +1,15 @@
+# Maven
+target/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# logs
+*.log
+
+# OS
+Thumbs.db

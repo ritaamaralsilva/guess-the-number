@@ -1,0 +1,161 @@
+.app-root {
+  font-family: "System";
+  -fx-font-family: "System";
+  font-size: 16px;
+  -fx-font-size: 16px;
+  -fx-text-fill: #ff758f;
+  background-color: linear-gradient(to bottom, #1e1e2f, #7777ac);
+  -fx-background-color: linear-gradient(to bottom, #1e1e2f, #7777ac);
+}
+
+.title {
+  font-size: 28px;
+  -fx-font-size: 28px;
+  font-weight: 800;
+  -fx-font-weight: 800;
+  -fx-text-fill: #8282c9;
+}
+
+.subtitle {
+  font-size: 16px;
+  -fx-font-size: 16px;
+  font-weight: 500;
+  -fx-font-weight: 500;
+  -fx-text-fill: #8282c9;
+}
+/* Title */
+.label {
+  -fx-text-fill: #8282c9;
+}
+
+/* Buttons */
+.button {
+  background-color: #ff4d6d;
+  -fx-text-fill: #9b9bf1;
+
+  font-weight: 700;
+  -fx-font-weight: 700;
+  font-size: 16px;
+  -fx-font-size: 16px;
+
+  -fx-background-radius: 8;
+  padding: 8 16 8 16;
+  -fx-padding: 8 16 8 16;
+
+  cursor: hand;
+  -fx-cursor: hand;
+}
+
+.button:hover {
+  background-color: #ff758f;
+  -fx-background-color: #ff758f;
+  -fx-text-fill: #595989;
+}
+
+.button:pressed {
+  background-color: #ff1a4d;
+  -fx-background-color: #ff1a4d;
+  -fx-text-fill: #222236;
+}
+
+.button.secondary {
+  background-color: #ff3c60;
+  -fx-background-color: #ff3c60;
+  -fx-text-fill: #595989;
+}
+
+.button.secondary:hover {
+  background-color: #ff8ea3;
+  -fx-background-color: #ff8ea3;
+  -fx-text-fill: #242438;
+}
+
+/* Text input */
+.text-field {
+  -fx-background-radius: 6;
+  border-radius: 6;
+  -fx-border-radius: 6;
+
+  border-color: #ff4d6d;
+  -fx-border-color: #ff4d6d;
+
+  border-width: 2;
+  -fx-border-width: 2;
+
+  font-size: 14px;
+  -fx-font-size: 14px;
+
+  padding: 6;
+  -fx-padding: 6;
+
+  background-color: #2a2a3d;
+  -fx-background-color: #2a2a3d;
+  -fx-text-fill: white;
+}
+
+/* Feedback text */
+#feedback {
+  font-size: 14px;
+  -fx-font-size: 14px;
+  -fx-text-fill: #ff0000;
+}
+
+.heart {
+  -fx-effect: dropshadow(gaussian, #ff4d6d, 6, 0.3, 0, 0);
+}
+
+.top-bar {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  padding: 10px;
+  -fx-padding: 10px;
+}
+
+.bottom-bar {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  padding: 10px;
+  -fx-padding: 10px;
+}
+
+.menu-layout {
+  -fx-spacing: 20px;
+}
+
+.game-layout {
+  -fx-spacing: 18px;
+}
+
+.screen-gameover {
+  -fx-spacing: 18px;
+}
+
+.screen-win {
+  -fx-spacing: 18px;
+}
+
+.menu-button {
+  -fx-pref-width: 200px;
+  -fx-pref-height: 40px;
+}
+
+.body-text {
+  font-size: 15px;
+  -fx-font-size: 15px;
+  -fx-text-fill: #e6e6e6;
+  -fx-line-spacing: 4px;
+  max-width: 420px;
+  -fx-max-width: 420px;
+}
+
+.screen-rules {
+  text-align: center;
+  -fx-text-align: center;
+  -fx-spacing: 18;
+}
+
+.screen-about {
+  text-align: center;
+  -fx-text-align: center;
+  -fx-spacing: 18;
+}
