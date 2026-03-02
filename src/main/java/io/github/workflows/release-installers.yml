@@ -1,0 +1,55 @@
+name: Build installers (jpackage) and upload to Release
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build installer with jpackage
+        run: mvn -B clean javafx:jpackage
+
+      - name: List generated artifacts
+        shell: bash
+        run: |
+          echo "---- target directory ----"
+          ls -la target || true
+          echo "---- target/jpackage ----"
+          ls -la target/jpackage || true
+
+      # Upload ALL common installer outputs produced by jpackage on each OS
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            target/jpackage/**/*.dmg
+            target/jpackage/**/*.pkg
+            target/jpackage/**/*.msi
+            target/jpackage/**/*.exe
+            target/jpackage/**/*.deb
+            target/jpackage/**/*.rpm
+            target/jpackage/**/*.AppImage
+            target/jpackage/**/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
