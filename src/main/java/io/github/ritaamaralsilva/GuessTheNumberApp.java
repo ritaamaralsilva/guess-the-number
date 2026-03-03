@@ -15,6 +15,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.scene.Node;
 import javafx.util.Duration;
 import java.util.Objects;
@@ -116,30 +118,33 @@ public class GuessTheNumberApp extends Application {
 
     Timeline flashes = new Timeline(
             new KeyFrame(Duration.ZERO, e -> root.setStyle(normalStyle)),
-            new KeyFrame(Duration.millis(60), e -> root.setStyle(normalStyle + "; -fx-background-color: #1fd17a;")),
-            new KeyFrame(Duration.millis(120), e -> root.setStyle(normalStyle)),
-            new KeyFrame(Duration.millis(180), e -> root.setStyle(normalStyle + "; -fx-background-color: #1fd17a;")),
-            new KeyFrame(Duration.millis(240), e -> root.setStyle(normalStyle)),
-            new KeyFrame(Duration.millis(300), e -> root.setStyle(normalStyle + "; -fx-background-color: #1fd17a;")),
-            new KeyFrame(Duration.millis(360), e -> root.setStyle(normalStyle))
+            new KeyFrame(Duration.millis(400), e -> root.setStyle(normalStyle + "; -fx-background-color: #1fd17a;")),
+            new KeyFrame(Duration.millis(800), e -> root.setStyle(normalStyle)),
+            new KeyFrame(Duration.millis(1200), e -> root.setStyle(normalStyle + "; -fx-background-color: #1fd17a;")),
+            new KeyFrame(Duration.millis(1600), e -> root.setStyle(normalStyle)),
+            new KeyFrame(Duration.millis(2000), e -> root.setStyle(normalStyle + "; -fx-background-color: #1fd17a;")),
+            new KeyFrame(Duration.millis(2800), e -> root.setStyle(normalStyle)),
+            new KeyFrame(Duration.millis(3200), e -> root.setStyle(normalStyle + "; -fx-background-color: #1fd17a;")),
+            new KeyFrame(Duration.millis(3600), e -> root.setStyle(normalStyle))
+
     );
 
     // 2) pop do título
-    ScaleTransition pop = new ScaleTransition(Duration.millis(260), title);
+    ScaleTransition pop = new ScaleTransition(Duration.millis(450), title);
     pop.setFromX(0.92);
     pop.setFromY(0.92);
     pop.setToX(1.08);
     pop.setToY(1.08);
     pop.setAutoReverse(true);
-    pop.setCycleCount(2);
+    pop.setCycleCount(5);
     pop.setInterpolator(Interpolator.EASE_OUT);
 
-    // 3) pequena rotação/tilt (opcional, dá vibe "celebration")
-    RotateTransition tilt = new RotateTransition(Duration.millis(260), title);
+    // 3) pequena rotação/tilt do título
+    RotateTransition tilt = new RotateTransition(Duration.millis(450), title);
     tilt.setFromAngle(0);
     tilt.setToAngle(-6);
     tilt.setAutoReverse(true);
-    tilt.setCycleCount(2);
+    tilt.setCycleCount(5);
     tilt.setInterpolator(Interpolator.EASE_BOTH);
 
     new ParallelTransition(flashes, pop, tilt).play();
@@ -177,12 +182,12 @@ public class GuessTheNumberApp extends Application {
         VBox menuLayout = new VBox(20, title, startGameButton, rulesButton, aboutButton, exitButton);
         menuLayout.setAlignment(Pos.CENTER);
         menuLayout.setPadding(new Insets(20));
-        menuLayout.setMinWidth(420);
-        menuLayout.setMinHeight(320);
+        menuLayout.setMinWidth(520);
+        menuLayout.setMinHeight(360);
 
-        menuLayout.getStyleClass().addAll("app-root", "menu-layout");
+        menuLayout.getStyleClass().addAll("app-root", "menu-layout", "screen-menu");
 
-        Scene scene = new Scene(menuLayout, 420, 320);
+        Scene scene = new Scene(menuLayout, 520, 360);
         applyStyles(scene);
         stage.setScene(scene);
     }
@@ -216,9 +221,6 @@ public class GuessTheNumberApp extends Application {
         Button guessButton = new Button("Guess");
         guessButton.setDefaultButton(true);
 
-        feedbackLabel = new Label("");
-        feedbackLabel.setId("feedback");
-
         Runnable submit = () -> {
             String raw = guessInput.getText();
             if (raw == null || raw.trim().isEmpty()) {
@@ -239,6 +241,17 @@ public class GuessTheNumberApp extends Application {
 
         HBox inputLayout = new HBox(10, guessInput, guessButton);
         inputLayout.setAlignment(Pos.CENTER);
+
+        feedbackLabel = new Label("");
+        feedbackLabel.setId("feedback");
+
+        feedbackLabel.setWrapText(true);
+        feedbackLabel.setTextAlignment(TextAlignment.CENTER);
+        feedbackLabel.setAlignment(Pos.CENTER);
+        feedbackLabel.setMaxWidth(Double.MAX_VALUE);
+
+        feedbackLabel.maxWidthProperty().bind(inputLayout.widthProperty());
+        feedbackLabel.prefWidthProperty().bind(inputLayout.widthProperty());
 
         VBox center = new VBox(18, promptLabel, inputLayout, feedbackLabel);
         center.setAlignment(Pos.CENTER);
@@ -361,19 +374,21 @@ public class GuessTheNumberApp extends Application {
         title.getStyleClass().add("title");
 
         Label hint = new Label("You guessed the number with " + gameState.lives() + " lives remaining.");
-        hint.getStyleClass().add("subtitle");
+        hint.getStyleClass().add("congrats");
 
         Button newGameButton = new Button("New Game");
         newGameButton.setOnAction(e -> startNewGame());
+        newGameButton.getStyleClass().add("win-button");
 
         Button quitButton = new Button("Quit");
         quitButton.setOnAction(e -> stage.close());
+        quitButton.getStyleClass().add("win-button");
 
         VBox layout = new VBox(18, title, hint, newGameButton, quitButton);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(24));
-        layout.setMinWidth(420);
-        layout.setMinHeight(300);
+        layout.setMinWidth(520);
+        layout.setMinHeight(360);
 
         layout.getStyleClass().addAll("app-root", "screen-win");
         layout.setOpacity(0.0);
@@ -394,20 +409,22 @@ public class GuessTheNumberApp extends Application {
 
         Button newGameButton = new Button("New Game");
         newGameButton.setOnAction(e -> startNewGame());
+        newGameButton.getStyleClass().add("over-button");
 
         Button quitButton = new Button("Quit");
         quitButton.setOnAction(e -> stage.close());
+        quitButton.getStyleClass().add("over-button");
 
         VBox layout = new VBox(18, title, hint, newGameButton, quitButton);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(24));
-        layout.setMinWidth(420);
-        layout.setMinHeight(300);
+        layout.setMinWidth(520);
+        layout.setMinHeight(360);
 
-        layout.getStyleClass().addAll("app-root", "screen-gameover");
+        layout.getStyleClass().addAll("app-root", "screen-gameover", "over-button", "over-button:hover");
         layout.setOpacity(0.0);
 
-        Scene scene = new Scene(layout, 420, 300);
+        Scene scene = new Scene(layout, 520, 360);
         setSceneWithFade(scene);
         stage.setScene(scene);
     }
@@ -447,16 +464,27 @@ public class GuessTheNumberApp extends Application {
         Label title = new Label("About");
         title.getStyleClass().add("title");
 
-        Label about = new Label(
-            "Guess The Number\n" +
-            "by Rita Silva\n" +
-            "\n" +
-            "Built with Java + JavaFX\n" +
-            "2026"
-        );
+        Text tGame = new Text("Guess The Number");
+        tGame.getStyleClass().addAll("about-text", "about-bold"); 
 
-        about.getStyleClass().add("body-text");
-        about.setWrapText(true);
+        Text tBy = new Text("\nCreated by ");
+        tBy.getStyleClass().add("about-text");
+
+        Text tName = new Text("Rita Silva");
+        tName.getStyleClass().addAll("about-text", "about-bold");
+
+        Text tBuilt = new Text("\n\nBuilt with ");
+        tBuilt.getStyleClass().add("about-text");
+
+        Text tTech = new Text("Java & JavaFX");
+        tTech.getStyleClass().add("about-text");
+
+        Text tYear = new Text("\n© 2026");
+        tYear.getStyleClass().add("about-text");
+
+        TextFlow about = new TextFlow(tGame, tBy, tName, tBuilt, tTech, tYear);
+        about.setTextAlignment(TextAlignment.CENTER);
+        about.setMaxWidth(420);
 
         Button backButton = new Button("Back");
         backButton.getStyleClass().add("secondary");
